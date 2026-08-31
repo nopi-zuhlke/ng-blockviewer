@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { DestroyRef, Injectable, inject, signal } from '@angular/core';
 import { NodeTree } from '../blocks';
 
 const SAMPLE_NODE_TREE: NodeTree = [
@@ -59,7 +59,14 @@ export class PageContainerService {
 
   constructor() {
     this.nodeTreeState.set(SAMPLE_NODE_TREE);
+
+    const onMessage = (event: MessageEvent) => this.handleHostMessage(event);
+    window.addEventListener('message', onMessage);
+    inject(DestroyRef)
+      .onDestroy(() => window.removeEventListener('message', onMessage));
   }
 
-
+  private handleHostMessage(event: MessageEvent): void {
+    this.nodeTreeState.set(event.data);
+  }
 }

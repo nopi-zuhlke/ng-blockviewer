@@ -1,11 +1,10 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
 import './blocks';
 import { PageContainer } from './components/page-container/page-container';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, PageContainer],
+  imports: [PageContainer],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
