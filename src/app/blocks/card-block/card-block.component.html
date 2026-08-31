@@ -1,0 +1,9 @@
+<article class="block rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-shadow duration-200 hover:shadow-md">
+  <header class="mb-3">
+    <h3 class="text-lg font-semibold text-slate-900">{{ cardTitle() }}</h3>
+  </header>
+
+  @if (cardDescription()) {
+    <p class="text-sm leading-6 text-slate-600">{{ cardDescription() }}</p>
+  }
+</article>
