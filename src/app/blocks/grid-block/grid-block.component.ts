@@ -11,13 +11,6 @@ import type { NodeType, TreeNode } from '../nodetype';
 })
 export class GridBlockComponent extends BaseBlockComponent<TreeNode> {
 
-  public readonly gridLabel = computed(() => {
-    const columns = this.getContentValue('columns');
-    const itemCount = this.children().length;
-
-    return `Grid (${typeof columns === 'number' ? columns : 'auto'} columns, ${itemCount} items)`;
-  });
-
   public readonly columns = computed(() => {
     const columns = this.getContentValue('columns');
     return typeof columns === 'number' ? Math.max(1, columns) : 3;

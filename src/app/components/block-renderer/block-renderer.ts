@@ -1,7 +1,7 @@
 import { Component, computed, input } from '@angular/core';
 import { NgComponentOutlet } from '@angular/common';
-import { createBlockComponentType } from '../../blocks';
-import type { TreeNode } from '../../blocks';
+import { createBlockComponentType } from '../../blocks/block-factory';
+import type { TreeNode } from '../../blocks/nodetype';
 
 @Component({
   selector: 'app-block-renderer',
