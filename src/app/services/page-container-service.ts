@@ -1,7 +1,7 @@
 import { DestroyRef, Injectable, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NodeTree, TreeNode } from '../blocks';
-import { BACKEND_BASE_URL } from '../app.config';
+import { RUNTIME_CONFIG } from '../runtime-config';
 
 interface PageResponse {
   blocks?: Omit<TreeNode, 'children'>[];
@@ -59,6 +59,7 @@ const SAMPLE_NODE_TREE: NodeTree = [
   providedIn: 'root',
 })
 export class PageContainerService {
+  private readonly config = inject(RUNTIME_CONFIG);
   private readonly nodeTreeState = signal<NodeTree>([]);
 
   public readonly nodeTree = this.nodeTreeState.asReadonly();
@@ -75,7 +76,7 @@ export class PageContainerService {
   }
 
   private fetchRemoteNodeTree(): void {
-    fetch(`${BACKEND_BASE_URL}/api/content/v1/pages/${this.getPageName()}`)
+    fetch(`${this.config.backendBaseUrl}/api/content/v1/pages/${this.getPageName()}`)
       .then((response) => response.json())
       .then((page: PageResponse) => {
         this.nodeTreeState.set(this.buildNodeTree(page.blocks ?? []));

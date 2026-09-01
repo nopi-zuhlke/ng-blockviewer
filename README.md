@@ -54,6 +54,25 @@ ng e2e
 
 Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
 
+## Docker
+
+Build and run the app as a container:
+
+```bash
+docker build -t ng-blockviewer .
+docker run -p 8080:80 ng-blockviewer
+```
+
+### Runtime configuration
+
+The backend base URL is set at container start via the `BACKEND_BASE_URL` environment variable (default: `http://localhost:3000`):
+
+```bash
+docker run -p 8080:80 -e BACKEND_BASE_URL=https://api.example.com ng-blockviewer
+```
+
+For local development (`ng serve`), the value comes from `public/config.json`.
+
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

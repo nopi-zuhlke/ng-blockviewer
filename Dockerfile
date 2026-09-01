@@ -11,6 +11,7 @@ RUN npm run build
 # Runtime stage
 FROM nginx:alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY docker-entrypoint.d/ /docker-entrypoint.d/
 COPY --from=build /app/dist/ng-blockviewer/browser /usr/share/nginx/html
 
 EXPOSE 80
