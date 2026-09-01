@@ -1,1 +1,33 @@
-<div>{{ teaserTitle }}</div>
+<section
+  class="relative overflow-hidden rounded-xl border border-slate-200 shadow-sm"
+  [class.text-white]="imageUrl()"
+  [class.bg-white]="!imageUrl()"
+  [style.background-image]="imageUrl() ? 'url(' + imageUrl() + ')' : null"
+  [class.bg-cover]="!!imageUrl()"
+  [class.bg-center]="!!imageUrl()"
+>
+  <div
+    class="relative p-6"
+    [class.bg-gradient-to-t]="!!imageUrl()"
+    [class.from-black/70]="!!imageUrl()"
+    [class.to-black/20]="!!imageUrl()"
+  >
+    <h3
+      class="text-lg font-semibold"
+      [class.text-white]="!!imageUrl()"
+      [class.text-slate-900]="!imageUrl()"
+    >
+      {{ teaserTitle() }}
+    </h3>
+
+    @if (teaserSubtitle()) {
+      <p
+        class="mt-1 text-sm leading-6"
+        [class.text-white/90]="!!imageUrl()"
+        [class.text-slate-600]="!imageUrl()"
+      >
+        {{ teaserSubtitle() }}
+      </p>
+    }
+  </div>
+</section>

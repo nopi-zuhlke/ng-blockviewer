@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { registerBlockComponent } from '../block-registry';
 import { BaseBlockComponent } from '../base-block.component';
 import type { NodeType, TreeNode } from '../nodetype';
@@ -13,9 +13,23 @@ export class TeaserBlockComponent extends BaseBlockComponent<TreeNode> {
     return 'Teaser';
   }
 
-  public get teaserTitle(): string {
-    return this.getStringContent('headline', this.getStringContent('title', 'Teaser'));
-  }
+  public readonly teaserTitle = computed(() =>
+    this.getStringContent('headline', this.getStringContent('title', 'Teaser')),
+  );
+
+  public readonly teaserSubtitle = computed(() =>
+    this.getStringContent(
+      'subtitle',
+      this.getStringContent('subheading', this.getStringContent('text', '')),
+    ),
+  );
+
+  public readonly imageUrl = computed(() =>
+    this.getStringContent(
+      'imageUrl',
+      this.getStringContent('image', this.getStringContent('imageSrc', '')),
+    ),
+  );
 }
 
 registerBlockComponent(TeaserBlockComponent);
