@@ -1,5 +1,4 @@
 import { DestroyRef, Injectable, inject, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { NodeTree, TreeNode } from '../blocks';
 import { RUNTIME_CONFIG } from '../runtime-config';
 
@@ -65,7 +64,7 @@ export class PageContainerService {
   public readonly nodeTree = this.nodeTreeState.asReadonly();
 
   constructor() {
-    const editMode = inject(ActivatedRoute).snapshot.queryParamMap.has('editMode');
+    const editMode = new URLSearchParams(window.location.search).has('editMode');
     if (editMode) {
       this.setUpMessageConfiguration();
     } else if (this.getPageName()) {
