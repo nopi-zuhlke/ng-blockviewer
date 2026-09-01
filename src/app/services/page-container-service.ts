@@ -1,5 +1,11 @@
 import { DestroyRef, Injectable, inject, signal } from '@angular/core';
-import { NodeTree } from '../blocks';
+import { ActivatedRoute } from '@angular/router';
+import { NodeTree, TreeNode } from '../blocks';
+import { BACKEND_BASE_URL } from '../app.config';
+
+interface PageResponse {
+  blocks?: Omit<TreeNode, 'children'>[];
+}
 
 const SAMPLE_NODE_TREE: NodeTree = [
   {
@@ -58,12 +64,47 @@ export class PageContainerService {
   public readonly nodeTree = this.nodeTreeState.asReadonly();
 
   constructor() {
-    this.nodeTreeState.set(SAMPLE_NODE_TREE);
+    const editMode = inject(ActivatedRoute).snapshot.queryParamMap.has('editMode');
+    if (editMode) {
+      this.setUpMessageConfiguration();
+    } else if (this.getPageName()) {
+      this.fetchRemoteNodeTree();
+    } else {
+      this.nodeTreeState.set(SAMPLE_NODE_TREE);
+    }
+  }
 
+  private fetchRemoteNodeTree(): void {
+    fetch(`${BACKEND_BASE_URL}/api/content/v1/pages/${this.getPageName()}`)
+      .then((response) => response.json())
+      .then((page: PageResponse) => {
+        this.nodeTreeState.set(this.buildNodeTree(page.blocks ?? []));
+      });
+  }
+
+  private buildNodeTree(blocks: Omit<TreeNode, 'children'>[]): NodeTree {
+    const nodes: TreeNode[] = blocks.map((block) => ({ ...block, children: [] }));
+    const nodesById = new Map(nodes.map((node) => [node.id, node]));
+    const roots: TreeNode[] = [];
+    for (const node of nodes) {
+      const parent = node.parentId ? nodesById.get(node.parentId) : undefined;
+      if (parent) {
+        parent.children.push(node);
+      } else {
+        roots.push(node);
+      }
+    }
+    return roots;
+  }
+
+  private getPageName(): string {
+    return window.location.pathname.replace(/^\//, '');
+  }
+
+  private setUpMessageConfiguration() {
     const onMessage = (event: MessageEvent) => this.handleHostMessage(event);
     window.addEventListener('message', onMessage);
-    inject(DestroyRef)
-      .onDestroy(() => window.removeEventListener('message', onMessage));
+    inject(DestroyRef).onDestroy(() => window.removeEventListener('message', onMessage));
   }
 
   private handleHostMessage(event: MessageEvent): void {
